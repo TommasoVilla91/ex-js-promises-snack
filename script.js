@@ -1,9 +1,9 @@
 ///// SNACK 1
 function getPostTitle(id) {
-    return new Promise((result, reject) => {
+    return new Promise((resolve, reject) => {
         fetch(`https://dummyjson.com/posts/${id}`)
         .then(response => response.json())
-        .then(obj => result(obj))
+        .then(obj => resolve(obj))
         .catch(reject)
     });
 };
@@ -14,7 +14,7 @@ getPostTitle(2)
 
 // BONUS 1
 function getPost(id) {
-    return new Promise((result, reject) => {
+    return new Promise((resolve, reject) => {
         fetch(`https://dummyjson.com/posts/${id}`)
         .then(response => response.json())
         .then(obj => {
@@ -22,11 +22,11 @@ function getPost(id) {
             fetch(`https://dummyjson.com/users/` + obj.userId)
             .then(response => response.json())
             .then(user => {
-                const resolve = {
+                const result = {
                     ...obj,
                     user
                 }
-                result(resolve) 
+                resolve(result) 
             })
             .catch(reject)                       
         })
@@ -40,16 +40,24 @@ getPost(3)
 
 ///// SNACK 2
 function lanciaDado() {
-    return new Promise((result, reject) => {
+    return new Promise((resolve, reject) => {
         setTimeout(() => {
-            const value = Math.ceil(Math.random() * 6);
-            if(Math.floor(Math.random() * 5)) {
-                result
+            // variabile per casistica incastramento dado
+            const isStuck = Math.random() < 0.2;
+
+            // se si incastra reject
+            if(isStuck) {
+                reject('Dado incastrato... Riprova')
+
+            // altrimenti da il risultato
             } else {
-                reject
+                const value = Math.ceil(Math.random() * 6);
+                resolve(value);
             }
         }, 3000);
     });
 };
 
 lanciaDado()
+.then(resolve => console.log(resolve))
+.catch(err => console.error(err))
