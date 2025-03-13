@@ -19,14 +19,37 @@ function getPost(id) {
         .then(response => response.json())
         .then(obj => {
             console.log(obj.userId)
-            return fetch(`https://dummyjson.com/users/` + obj.userId)
+            fetch(`https://dummyjson.com/users/` + obj.userId)
             .then(response => response.json())
-            .then(user => result(user))
-            .catch(reject)
-        });
+            .then(user => {
+                const resolve = {
+                    ...obj,
+                    user
+                }
+                result(resolve) 
+            })
+            .catch(reject)                       
+        })
+        .catch(reject)
     });
 };
 
 getPost(3)
-.then(user => console.log(user))
+.then(obj => console.log(obj))
 .catch(error => console.error(error))
+
+///// SNACK 2
+function lanciaDado() {
+    return new Promise((result, reject) => {
+        setTimeout(() => {
+            const value = Math.ceil(Math.random() * 6);
+            if(Math.floor(Math.random() * 5)) {
+                result
+            } else {
+                reject
+            }
+        }, 3000);
+    });
+};
+
+lanciaDado()
